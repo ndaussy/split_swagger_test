@@ -1,0 +1,159 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>io.swagger</groupId>
+	<artifactId>swagger-spring</artifactId>
+	<packaging>jar</packaging>
+	<name>swagger-spring</name>
+	<version>1.0.0</version>
+	<properties>
+		<java.version>1.8</java.version>
+		<maven.compiler.source>${java.version}</maven.compiler.source>
+		<maven.compiler.target>${java.version}</maven.compiler.target>
+		<springfox-version>2.7.0</springfox-version>
+		<swagger.spec.file>api-pet-dog.yaml</swagger.spec.file>
+		<tci.api.package.name></tci.api.package.name>
+		 <swagger.plugin.version>2.3.1</swagger.plugin.version>
+	</properties>
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>1.5.9.RELEASE</version>
+	</parent>
+	<build>
+		<sourceDirectory>src/main/java</sourceDirectory>
+		<plugins>
+			<!-- Generate source code server from swagger yml specification -->
+			<plugin>
+				<groupId>io.swagger</groupId>
+				<artifactId>swagger-codegen-maven-plugin</artifactId>
+				<version>${swagger.plugin.version}</version>
+				<executions>
+					<execution>
+						<id>generate-server-internal</id>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<configuration>
+							<inputSpec>${basedir}/src/main/resources/api-pet-dog-internal.yaml</inputSpec>
+							<language>spring</language>
+							<generateApis>true</generateApis>
+							<generateApiDocumentation>false</generateApiDocumentation>
+							<generateApiTests>false</generateApiTests>
+							<generateModels>true</generateModels>
+							<generateModelDocumentation>false</generateModelDocumentation>
+							<generateModelTests>false</generateModelTests>
+							<generateSupportingFiles>false</generateSupportingFiles>
+							<modelPackage>io.swagger.test.model</modelPackage>
+							<apiPackage>io.swagger.internal.api</apiPackage>
+							<configOptions>
+								<hideGenerationTimestamp>true</hideGenerationTimestamp>
+								<dateLibrary>java8</dateLibrary>
+								<sourceFolder>api</sourceFolder>
+								<library>spring-boot</library>
+								<delegatePattern>true</delegatePattern>
+							</configOptions>
+							<!-- Review this later with Jean as it has imapct on existing source 
+								code -->
+							<!--<typeMappings> <typeMapping>OffsetDateTime=Instant</typeMapping> 
+								</typeMappings> <importMappings> <importMapping>java.time.OffsetDateTime=java.time.Instant</importMapping> 
+								</importMappings> -->
+							<output>target/generated-sources</output>
+						</configuration>
+					</execution>
+					<execution>
+						<id>generate-server-external</id>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<configuration>
+							<inputSpec>${basedir}/src/main/resources/api-pet-dog-external.yaml</inputSpec>
+							<language>spring</language>
+							<generateApis>true</generateApis>
+							<generateApiDocumentation>false</generateApiDocumentation>
+							<generateApiTests>false</generateApiTests>
+							<generateModels>true</generateModels>
+							<generateModelDocumentation>false</generateModelDocumentation>
+							<generateModelTests>false</generateModelTests>
+							<generateSupportingFiles>false</generateSupportingFiles>
+							<modelPackage>io.swagger.test.model</modelPackage>
+							<apiPackage>io.swagger.external.api</apiPackage>
+							<configOptions>
+								<hideGenerationTimestamp>true</hideGenerationTimestamp>
+								<dateLibrary>java8</dateLibrary>
+								<sourceFolder>api</sourceFolder>
+								<library>spring-boot</library>
+								<delegatePattern>true</delegatePattern>
+							</configOptions>
+							<!-- Review this later with Jean as it has imapct on existing source 
+								code -->
+							<!--<typeMappings> <typeMapping>OffsetDateTime=Instant</typeMapping> 
+								</typeMappings> <importMappings> <importMapping>java.time.OffsetDateTime=java.time.Instant</importMapping> 
+								</importMappings> -->
+							<output>target/generated-sources</output>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>build-helper-maven-plugin</artifactId>
+						<version>3.0.0</version>
+						<executions>
+							<execution>
+								<id>add-api-source</id>
+								<phase>generate-sources</phase>
+								<goals>
+									<goal>add-source</goal>
+								</goals>
+								<configuration>
+									<sources>
+										<source>target/generated-sources/api/</source>
+										<source>target/generated-sources/annotations/</source>
+										<source>target/generated-sources-client</source>
+									</sources>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+		</plugins>
+	</build>
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-tomcat</artifactId>
+		</dependency>
+		<!--SpringFox dependencies -->
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger2</artifactId>
+			<version>${springfox-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger-ui</artifactId>
+			<version>${springfox-version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.github.joschi.jackson</groupId>
+			<artifactId>jackson-datatype-threetenbp</artifactId>
+			<version>2.6.4</version>
+		</dependency>
+		<!-- Bean Validation API support -->
+		<dependency>
+			<groupId>javax.validation</groupId>
+			<artifactId>validation-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+</project>
