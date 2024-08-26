@@ -10,7 +10,7 @@
 		<java.version>1.8</java.version>
 		<maven.compiler.source>${java.version}</maven.compiler.source>
 		<maven.compiler.target>${java.version}</maven.compiler.target>
-		<springfox-version>2.7.0</springfox-version>
+		<springfox-version>2.10.0</springfox-version>
 		<swagger.spec.file>api-pet-dog.yaml</swagger.spec.file>
 		<tci.api.package.name></tci.api.package.name>
 		 <swagger.plugin.version>2.3.1</swagger.plugin.version>
